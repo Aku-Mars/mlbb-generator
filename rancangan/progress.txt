@@ -1,0 +1,88 @@
+### **Daftar Progres dan Rencana Proyek: MLBB-GENERATOR**
+
+**Tahap 1: Inisialisasi & Fondasi Proyek (Selesai)**
+-   [x] Inisialisasi proyek Laravel 11.
+-   [x] Konfigurasi koneksi database.
+-   [x] Instalasi Filament untuk panel admin.
+-   [x] Instalasi Spatie/laravel-permission untuk manajemen peran.
+-   [x] Membuat semua file migrasi yang diperlukan (`users`, `roles`, `permissions`, `heroes`, `spells`, `items`, `builds`, `build_item`).
+-   [x] Menjalankan migrasi awal.
+
+**Tahap 2: Panel Admin & Data Awal (Selesai)**
+-   [x] **Membuat Model & Relasi:**
+    -   [x] Definisikan relasi antar model (User, Hero, Spell, Item, Build).
+-   [x] **Membuat Filament Resources:**
+    -   [x] Resource untuk manajemen `Users`.
+    -   [x] Resource untuk manajemen `Roles` & `Permissions`.
+    -   [x] Resource untuk manajemen `Heroes`.
+    -   [x] Resource untuk manajemen `Spells`.
+    -   [x] Resource untuk manajemen `Items`.
+-   [x] **Membuat Seeder (Data Awal):**
+    -   [x] Seeder untuk membuat peran (`super-admin`, `admin`, `user`).
+    -   [x] Seeder untuk membuat akun `super-admin`.
+    -   [x] Seeder untuk mengisi data contoh `heroes`, `spells`, dan `items`.
+    -   [x] Mengisi database dengan data awal.
+
+**Tahap 3: Logika Inti Generator (Selesai)**
+-   [x] **Membuat Service Class:**
+    -   [x] Buat `BuildGeneratorService.php` untuk menampung semua logika pembuatan build.
+-   [x] **Implementasi Logika Acak:**
+    -   [x] Fungsi untuk menerima filter (misal: lane, hero).
+    -   [x] Aturan: Pilih 1 item `boots` secara acak.
+    -   [x] Aturan: Pilih 5 item lain (non-boots) secara acak.
+    -   [x] Aturan: Pilih 1 `spell` secara acak.
+-   [x] **Menyimpan Hasil Build:**
+    -   [x] Fungsi untuk menyimpan build yang telah dibuat ke database, terhubung dengan `user_id`.
+
+**Tahap 4: Frontend & Fitur Pengguna (Livewire) (Dihapus)**
+-   [ ] **Sistem Autentikasi:**
+    -   [ ] Siapkan halaman login dan register (menggunakan Laravel Breeze).
+-   [ ] **Halaman Generator Utama:**
+    -   [ ] Buat komponen Livewire `BuildGenerator`.
+    -   [ ] Tambahkan filter untuk memilih hero dan lane.
+    -   [ ] Buat tombol "Generate" yang akan memanggil `BuildGeneratorService`.
+    -   [ ] Tampilkan hasil build (hero, spell, 6 item) secara visual.
+-   [ ] **Halaman Galeri:**
+    -   [ ] Buat komponen Livewire `BuildGallery`.
+    -   [ ] Tampilkan semua build yang bersifat publik dengan paginasi.
+    -   [ ] Tambahkan filter untuk mencari build berdasarkan hero.
+-   [ ] **Halaman Profil Pengguna:**
+    -   [ ] Halaman untuk menampilkan build yang telah dibuat oleh pengguna yang sedang login.
+
+**Tahap 5: Fitur Tambahan & Penyempurnaan (Selesai)**
+-   [x] **Konversi Gambar ke WebP:**
+    -   [x] Semua gambar yang diunggah (misal: ikon hero, item) akan dikonversi dan disimpan dalam format `.webp` untuk optimasi.
+-   [ ] **Unduh Build sebagai Gambar:**
+    -   [ ] Implementasikan fitur untuk mengonversi tampilan build menjadi file gambar (PNG/JPEG).
+-   [ ] **Penyempurnaan UI/UX:**
+    -   [ ] Poles tampilan menggunakan Tailwind CSS agar responsif dan menarik.
+    -   [ ] Tambahkan interaktivitas dengan Alpine.js jika diperlukan.
+-   [ ] **Pengujian (Testing):**
+    -   [x] Buat Feature Test untuk memastikan logika generator berjalan sesuai aturan.
+    -   [ ] Buat tes untuk komponen-komponen Livewire.
+
+---
+
+**Tahap 6: Fitur Baru & Penyempurnaan Lanjutan (Dihapus)**
+-   [ ] **Pembaruan Model & Registrasi:**
+    -   [ ] Tambahkan kolom `name` pada tabel `users`.
+    -   [ ] Sesuaikan proses registrasi untuk menyertakan input `name`.
+-   [ ] **Halaman Profil Pengguna (Baru):**
+    -   [ ] Buat komponen Livewire untuk halaman profil.
+    -   [ ] Implementasikan fungsi untuk mengubah nama, email, dan password.
+    -   [ ] Desain UI untuk halaman profil.
+-   [ ] **Halaman Manual Build (Baru):**
+    -   [ ] Buat komponen Livewire untuk pembuatan build manual.
+    -   [ ] Implementasikan logika untuk memilih hero, spell, dan 6 item.
+    -   [ ] Desain UI untuk halaman manual build.
+-   [ ] **Pembaruan Navigasi & Akses:**
+    -   [ ] Tambahkan menu "Manual" dan "Profil" ke navbar.
+    -   [ ] Atur hak akses: tamu hanya bisa melihat "Generator", "Manual", dan "Galeri".
+    -   [ ] Arahkan tamu ke halaman login saat mencoba membuat build.
+-   [ ] **Penyempurnaan UI/UX Lanjutan:**
+    -   [ ] Pastikan semua halaman baru memiliki tampilan yang menarik dan responsif.
+
+---
+
+**Status & Kendala (30 Juli 2025)**
+- **Tindakan Berikutnya:** Melanjutkan implementasi fitur-fitur baru sesuai dengan rencana di Tahap 6.

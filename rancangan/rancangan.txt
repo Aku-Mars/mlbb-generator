@@ -1,0 +1,89 @@
+# RANCANGAN PROYEK: MLBB-GENERATOR (LARAVEL 11)
+
+## 1. Tujuan Utama
+Membuat ulang aplikasi "MLBB Random Build Generator" dengan fondasi yang lebih solid, terstruktur, dan mudah dikelola menggunakan TALL Stack (Tailwind CSS, Alpine.js, Laravel, Livewire) dan Filament.
+
+## 2. Tumpukan Teknologi (Tech Stack)
+-   **Backend Framework:** Laravel 11
+-   **Frontend:** Livewire & Blade (TALL Stack)
+-   **Admin Panel:** Filament
+-   **Manajemen Peran & Izin:** Spatie/laravel-permission
+-   **Database:** MySQL
+
+## 3. Struktur Database & Model
+Skema database akan dibuat menggunakan migrasi Laravel.
+
+-   **`roles` & `permissions` (dari Spatie):**
+    -   Untuk mengelola peran (super-admin, admin, user) dan izin.
+
+-   **`users`:**
+    -   `id`, `name`, `email`, `password`, `timestamps`.
+    -   Relasi ke `roles`.
+
+-   **`heroes`:**
+    -   `id`, `name`, `lane` (enum: exp, mid, roam, jungle, gold), `icon_url`, `timestamps`.
+
+-   **`spells`:**
+    -   `id`, `name`, `icon_url`, `timestamps`.
+
+-   **`items`:**
+    -   `id`, `name`, `category` (enum: physical, mage, tank, boots, etc.), `icon_url`, `timestamps`.
+    -   **Catatan:** Kategori `boots` akan menjadi kategori khusus.
+
+-   **`builds`:**
+    -   `id`, `user_id` (foreign key), `hero_id` (foreign key), `spell_id` (foreign key), `challenge_name` (nullable), `timestamps`.
+
+-   **`build_item` (Pivot Table):**
+    -   `build_id` (foreign key), `item_id` (foreign key).
+    -   Untuk relasi many-to-many antara `builds` dan `items`.
+
+## 4. Logika Generator Build
+Logika utama akan berada di sebuah service class di Laravel.
+-   Generator akan menerima request (misal: hero, lane).
+-   **Aturan Khusus:**
+    1.  Pilih **1 (satu) item** secara acak dari kategori `boots`. Ini wajib ada dalam setiap build.
+    2.  Pilih **5 (lima) item** lainnya secara acak dari kategori selain `boots`.
+    3.  Pilih 1 spell acak.
+-   Hasil build (hero, spell, 6 item) akan disimpan ke database.
+
+## 5. Fitur Utama
+-   **Halaman Generator:**
+    -   Filter untuk memilih hero/lane.
+    -   Tombol "Generate" yang memanggil logika backend melalui Livewire.
+    -   Menampilkan hasil build secara visual.
+    -   Opsi untuk mengunduh hasil build sebagai gambar (akan diimplementasikan).
+    -   Akses terbatas untuk tamu (diarahkan ke login).
+
+-   **Halaman Manual Build:**
+    -   Memungkinkan pengguna memilih hero, spell, dan 6 item secara manual.
+    -   Menyimpan build ke profil pengguna.
+    -   Akses terbatas untuk tamu (diarahkan ke login).
+
+-   **Halaman Galeri:**
+    -   Menampilkan semua build publik.
+    -   Filter berdasarkan hero.
+    -   Paginasi.
+    -   Dapat diakses oleh tamu.
+
+-   **Halaman My Builds:**
+    -   Menampilkan semua build yang dibuat oleh pengguna yang sedang login.
+
+-   **Halaman Profil:**
+    -   Mengubah nama, email, dan password.
+
+-   **Panel Admin (Filament):**
+    -   Manajemen CRUD untuk Heroes, Spells, Items.
+    -   Manajemen Users, Roles, dan Permissions.
+    -   Melihat semua build yang dibuat.
+
+## 6. Rencana Pengembangan Awal
+1.  Inisialisasi proyek Laravel 11.
+2.  Instalasi dan konfigurasi Filament & Spatie.
+3.  Membuat migrasi database dan model.
+4.  Membuat seeder untuk data awal (roles, permissions, contoh hero/item).
+5.  Membangun Filament Resources untuk manajemen data.
+6.  Mengimplementasikan logika generator build.
+7.  Membuat halaman generator dan galeri menggunakan Livewire.
+
+## 7. Catatan Tambahan
+-   Gunakan `php artisan storage:link` untuk memastikan file di `storage/app/public` dapat diakses secara publik.
