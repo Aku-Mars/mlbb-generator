@@ -1,0 +1,58 @@
+# Kumpulan Prompt untuk Membuat Frontend MLBB Generator - Edisi Final
+
+Gunakan prompt berikut secara berurutan untuk membangun seluruh frontend aplikasi.
+
+---
+
+### **Langkah 1 & 2: Instalasi Breeze & Membuat Rute**
+**Prompt Gabungan:**
+"Tolong siapkan sistem autentikasi menggunakan Laravel Breeze, lalu buat rute web yang sesuai. Halaman generator, manual, dan galeri harus publik, sementara halaman 'my-builds' dan 'profile' harus memerlukan login."
+
+---
+
+### **Langkah 3: Membuat Semua Komponen Livewire**
+**Prompt:**
+"Tolong jalankan semua perintah `php artisan make:livewire` untuk membuat komponen berikut: `BuildGenerator`, `ManualBuild`, `BuildGallery`, dan `MyBuilds`."
+
+---
+
+### **Langkah 4: Implementasi Logika & Tampilan per Komponen (Revisi Final)**
+
+**Prompt untuk Generator:**
+"Tolong implementasikan komponen Livewire `BuildGenerator`.
+1.  **UI (View):** Buat UI dengan Tailwind CSS yang berisi:
+    -   Filter untuk **Lane** (gunakan checkbox untuk multi-select) dan filter untuk **Hero** (gunakan dropdown dengan fitur pencarian).
+    -   Tombol 'Generate Build'.
+    -   Area untuk menampilkan hasil build.
+2.  **Logika (Class):**
+    -   Buat properti untuk menampung data filter (`$selectedLanes = []`, `$selectedHeroId`).
+    -   Buat method `generate()`. Di dalamnya, periksa status login. Jika tamu, arahkan ke halaman login. Jika sudah login, panggil `BuildGeneratorService` dengan membawa data dari filter."
+
+**Prompt untuk Galeri:**
+"Tolong implementasikan komponen Livewire `BuildGallery`.
+1.  **UI (View):**
+    -   Tambahkan **dua input teks terpisah**: satu untuk pencarian berdasarkan nama Hero, dan satu lagi untuk pencarian berdasarkan nama Challenge.
+    -   Tampilkan hasil build dalam grid yang responsif dengan paginasi.
+2.  **Logika (Class):**
+    -   Buat properti `$searchHero` dan `$searchChallenge`.
+    -   Implementasikan logika query untuk mengambil data build, menerapkan kedua filter pencarian, dan paginasi."
+
+**Prompt untuk Manual Build:**
+"Tolong implementasikan komponen Livewire `ManualBuild`. UI harus berupa formulir untuk memilih Hero, Spell, 6 Item, dan mengisi nama Challenge. Method `save()` harus memeriksa login sebelum menyimpan, dan mengarahkan tamu ke halaman login."
+
+**Prompt untuk My Builds:**
+"Tolong implementasikan komponen Livewire `MyBuilds`.
+1.  **UI (View):**
+    -   Buat tombol utama **'Tambah Build Baru'**. Gunakan Alpine.js (`x-data`, `x-show`) untuk menampilkan/menyembunyikan sebuah **modal/popup** ketika tombol ini diklik.
+    -   Isi modal tersebut dengan dua tombol link: 'Buat Build Acak' (ke rute `dashboard`) dan 'Buat Build Manual' (ke rute `manual.build`).
+    -   Tampilkan build milik pengguna dalam bentuk grid.
+    -   Di setiap kartu build, tambahkan tombol **'Hapus'**. Gunakan `wire:click` dengan konfirmasi (`onclick="return confirm(...)"`).
+2.  **Logika (Class):**
+    -   Buat method `deleteBuild(\$buildId)`.
+    -   **SANGAT PENTING:** Di dalam method ini, sebelum menghapus, lakukan pengecekan untuk memastikan build dengan ID tersebut benar-benar milik pengguna yang sedang login (`\$build->user_id === auth()->id()`)."
+
+---
+
+### **Langkah 5: Memperbarui Navigasi Utama**
+**Prompt:**
+"Tolong modifikasi file `resources/views/layouts/navigation.blade.php`. Pastikan link navigasi 'Generator', 'Manual Build', dan 'Gallery' terlihat oleh semua pengguna. Link 'My Builds' dan 'Profile' hanya boleh muncul untuk pengguna yang sudah login."

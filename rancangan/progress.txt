@@ -34,20 +34,20 @@
 -   [x] **Menyimpan Hasil Build:**
     -   [x] Fungsi untuk menyimpan build yang telah dibuat ke database, terhubung dengan `user_id`.
 
-**Tahap 4: Frontend & Fitur Pengguna (Livewire) (Dihapus)**
--   [ ] **Sistem Autentikasi:**
-    -   [ ] Siapkan halaman login dan register (menggunakan Laravel Breeze).
--   [ ] **Halaman Generator Utama:**
-    -   [ ] Buat komponen Livewire `BuildGenerator`.
-    -   [ ] Tambahkan filter untuk memilih hero dan lane.
-    -   [ ] Buat tombol "Generate" yang akan memanggil `BuildGeneratorService`.
-    -   [ ] Tampilkan hasil build (hero, spell, 6 item) secara visual.
--   [ ] **Halaman Galeri:**
-    -   [ ] Buat komponen Livewire `BuildGallery`.
-    -   [ ] Tampilkan semua build yang bersifat publik dengan paginasi.
-    -   [ ] Tambahkan filter untuk mencari build berdasarkan hero.
--   [ ] **Halaman Profil Pengguna:**
-    -   [ ] Halaman untuk menampilkan build yang telah dibuat oleh pengguna yang sedang login.
+**Tahap 4: Frontend & Fitur Pengguna (Livewire) (Selesai)**
+-   [x] **Sistem Autentikasi:**
+    -   [x] Siapkan halaman login dan register (menggunakan Laravel Breeze).
+-   [x] **Halaman Generator Utama:**
+    -   [x] Buat komponen Livewire `BuildGenerator`.
+    -   [x] Tambahkan filter untuk memilih hero dan lane.
+    -   [x] Buat tombol "Generate" yang akan memanggil `BuildGeneratorService`.
+    -   [x] Tampilkan hasil build (hero, spell, 6 item) secara visual.
+-   [x] **Halaman Galeri:**
+    -   [x] Buat komponen Livewire `BuildGallery`.
+    -   [x] Tampilkan semua build yang bersifat publik dengan paginasi.
+    -   [x] Tambahkan filter untuk mencari build berdasarkan hero.
+-   [x] **Halaman Profil Pengguna:**
+    -   [x] Halaman untuk menampilkan build yang telah dibuat oleh pengguna yang sedang login.
 
 **Tahap 5: Fitur Tambahan & Penyempurnaan (Selesai)**
 -   [x] **Konversi Gambar ke WebP:**
@@ -63,24 +63,24 @@
 
 ---
 
-**Tahap 6: Fitur Baru & Penyempurnaan Lanjutan (Dihapus)**
--   [ ] **Pembaruan Model & Registrasi:**
-    -   [ ] Tambahkan kolom `name` pada tabel `users`.
-    -   [ ] Sesuaikan proses registrasi untuk menyertakan input `name`.
--   [ ] **Halaman Profil Pengguna (Baru):**
-    -   [ ] Buat komponen Livewire untuk halaman profil.
-    -   [ ] Implementasikan fungsi untuk mengubah nama, email, dan password.
-    -   [ ] Desain UI untuk halaman profil.
--   [ ] **Halaman Manual Build (Baru):**
-    -   [ ] Buat komponen Livewire untuk pembuatan build manual.
-    -   [ ] Implementasikan logika untuk memilih hero, spell, dan 6 item.
-    -   [ ] Desain UI untuk halaman manual build.
--   [ ] **Pembaruan Navigasi & Akses:**
-    -   [ ] Tambahkan menu "Manual" dan "Profil" ke navbar.
-    -   [ ] Atur hak akses: tamu hanya bisa melihat "Generator", "Manual", dan "Galeri".
-    -   [ ] Arahkan tamu ke halaman login saat mencoba membuat build.
--   [ ] **Penyempurnaan UI/UX Lanjutan:**
-    -   [ ] Pastikan semua halaman baru memiliki tampilan yang menarik dan responsif.
+**Tahap 6: Fitur Baru & Penyempurnaan Lanjutan (Selesai)**
+-   [x] **Pembaruan Model & Registrasi:**
+    -   [x] Tambahkan kolom `name` pada tabel `users`.
+    -   [x] Sesuaikan proses registrasi untuk menyertakan input `name`.
+-   [x] **Halaman Profil Pengguna (Baru):**
+    -   [x] Buat komponen Livewire untuk halaman profil.
+    -   [x] Implementasikan fungsi untuk mengubah nama, email, dan password.
+    -   [x] Desain UI untuk halaman profil.
+-   [x] **Halaman Manual Build (Baru):**
+    -   [x] Buat komponen Livewire untuk pembuatan build manual.
+    -   [x] Implementasikan logika untuk memilih hero, spell, dan 6 item.
+    -   [x] Desain UI untuk halaman manual build.
+-   [x] **Pembaruan Navigasi & Akses:**
+    -   [x] Tambahkan menu "Manual" dan "Profil" ke navbar.
+    -   [x] Atur hak akses: tamu hanya bisa melihat "Generator", "Manual", dan "Galeri".
+    -   [x] Arahkan tamu ke halaman login saat mencoba membuat build.
+-   [x] **Penyempurnaan UI/UX Lanjutan:**
+    -   [x] Pastikan semua halaman baru memiliki tampilan yang menarik dan responsif.
 
 ---
 

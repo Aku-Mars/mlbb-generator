@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Traits\ImageUpload;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Role; // Use the correct Role model
 
 class Hero extends Model
 {
-    use HasFactory, ImageUpload;
+    use HasFactory;
 
     protected $fillable = [
         'name',
@@ -18,17 +17,8 @@ class Hero extends Model
         'icon_url',
     ];
 
-    public function builds(): HasMany
+    public function roles(): BelongsToMany
     {
-        return $this->hasMany(Build::class);
-    }
-
-    public function setIconUrlAttribute($value)
-    {
-        if ($value instanceof UploadedFile) {
-            $this->attributes['icon_url'] = $this->uploadImage($value, 'heroes', $this->attributes['icon_url'] ?? null);
-        } else {
-            $this->attributes['icon_url'] = $value;
-        }
+        return $this->belongsToMany(Role::class, 'hero_role');
     }
 }

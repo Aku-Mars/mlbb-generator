@@ -17,6 +17,15 @@ class SpellSeeder extends Seeder
             ['name' => 'Flicker'],
             ['name' => 'Execute'],
             ['name' => 'Retribution'],
+            ['name' => 'Inspire'],
+            ['name' => 'Purify'],
+            ['name' => 'Aegis'],
+            ['name' => 'Flameshot'],
+            ['name' => 'Sprint'],
+            ['name' => 'Vengeance'],
+            ['name' => 'Petrify'],
+            ['name' => 'Revitalize'],
+            ['name' => 'Iron Wall'], // Assuming this is a valid spell, if not, it can be removed.
         ];
 
         foreach ($spells as $spell) {

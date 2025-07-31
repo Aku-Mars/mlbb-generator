@@ -1,0 +1,137 @@
+# Kumpulan Prompt Frontend untuk Gemini Pro (Web UI)
+
+Salin dan tempel setiap prompt di bawah ini ke dalam antarmuka Gemini Pro untuk menghasilkan kode frontend untuk aplikasi Anda. Pastikan untuk menjalankan perintah terminal (`php artisan`, `npm`) di komputer lokal Anda sesuai instruksi.
+
+---
+
+### **Langkah 1: Menyiapkan Autentikasi (Jalankan di Terminal Anda)**
+
+*Instruksi untuk Anda (bukan untuk Gemini):* Buka terminal di direktori proyek Anda dan jalankan perintah-perintah berikut secara berurutan.
+
+```bash
+composer require laravel/breeze --dev
+php artisan breeze:install # Pilih Blade, No, Pest
+npm install
+npm run build
+php artisan migrate
+```
+
+---
+
+### **Langkah 2: Membuat Rute Web
+
+**Prompt untuk Gemini Pro:**
+
+"Tolong buatkan saya konten untuk file `routes/web.php` dalam sebuah proyek Laravel. Logikanya adalah sebagai berikut:
+1.  Halaman `dashboard`, `manual`, dan `gallery` harus dapat diakses oleh publik.
+2.  Halaman `my-builds` dan `profile` hanya boleh diakses oleh pengguna yang sudah login.
+3.  Gunakan `Route::view()` untuk merutekan langsung ke file view Blade.
+
+Berikut adalah nama rute dan view yang sesuai:
+-   `/dashboard` -> `dashboard.blade.php` (name: `dashboard`)
+-   `/manual` -> `manual-build.blade.php` (name: `manual.build`)
+-   `/gallery` -> `gallery.blade.php` (name: `gallery`)
+-   `/my-builds` -> `my-builds.blade.php` (name: `my.builds`)
+-   `/profile` -> `profile.blade.php` (name: `profile`)
+
+Pastikan untuk menyertakan `require __DIR__.'/auth.php';` di bagian akhir."
+
+---
+
+### **Langkah 3: Membuat Komponen Livewire (Jalankan di Terminal Anda)**
+
+*Instruksi untuk Anda:* Buka terminal dan jalankan perintah ini:
+
+```bash
+php artisan make:livewire BuildGenerator
+php artisan make:livewire ManualBuild
+php artisan make:livewire BuildGallery
+php artisan make:livewire MyBuilds
+```
+
+---
+
+### **Langkah 4: Membuat Halaman Blade Utama
+
+**Prompt untuk Gemini Pro:**
+
+"Saya perlu membuat beberapa file view Blade utama untuk proyek Laravel saya. Tolong buatkan konten untuk 4 file berikut. Setiap file harus menggunakan layout `x-app-layout` dan menyertakan komponen Livewire yang sesuai di dalamnya.
+
+1.  **File:** `resources/views/dashboard.blade.php`
+    **Isi:** Harus menyertakan `<livewire:build-generator />`.
+
+2.  **File:** `resources/views/manual-build.blade.php`
+    **Isi:** Harus menyertakan `<livewire:manual-build />`.
+
+3.  **File:** `resources/views/gallery.blade.php`
+    **Isi:** Harus menyertakan `<livewire:build-gallery />`.
+
+4.  **File:** `resources/views/my-builds.blade.php`
+    **Isi:** Harus menyertakan `<livewire:my-builds />`."
+
+---
+
+### **Langkah 5: Implementasi Komponen Livewire (Satu per Satu)**
+
+**Prompt 5.1 - BuildGenerator:**
+
+"Tolong buatkan kode untuk komponen Livewire `BuildGenerator` di Laravel.
+
+**File Class (`app/Http/Livewire/BuildGenerator.php`):**
+-   Harus memiliki properti publik: `$heroes`, `$lanes`, `$selectedLanes = []`, `$selectedHeroId`, dan `$latestBuild`.
+-   Method `mount()`: Menginisialisasi `$heroes` dengan semua data dari model `Hero` dan `$lanes` dengan daftar lane (exp, mid, roam, jungle, gold).
+-   Method `generate()`: 
+    -   Memeriksa jika pengguna sudah login (`auth()->check()`). Jika tidak, arahkan ke rute `login`.
+    -   Jika sudah login, panggil service class `BuildGeneratorService` dengan membawa `$selectedLanes` dan `$selectedHeroId`.
+    -   Simpan hasilnya ke `$latestBuild`.
+
+**File View (`resources/views/livewire/build-generator.blade.php`):**
+-   Gunakan Tailwind CSS untuk styling.
+-   Harus ada dua bagian filter: satu dengan checkbox untuk memilih beberapa lane, dan satu lagi dengan dropdown yang bisa dicari (searchable) untuk memilih satu hero.
+-   Harus ada tombol 'Generate Build' yang terhubung ke method `generate()`.
+-   Harus ada area untuk menampilkan detail dari `$latestBuild` (ikon hero, spell, dan 6 item) jika tidak null."
+
+**Prompt 5.2 - BuildGallery:**
+
+"Tolong buatkan kode untuk komponen Livewire `BuildGallery`.
+
+**File Class (`app/Http/Livewire/BuildGallery.php`):**
+-   Gunakan `WithPagination`.
+-   Harus memiliki properti publik `$searchHero = ''` dan `$searchChallenge = ''`.
+-   Method `render()`: Mengambil data dari model `Build` dengan relasi `hero`, `spell`, dan `items`. Terapkan filter `where` berdasarkan `$searchHero` (pada relasi hero) dan `$searchChallenge`. Lakukan paginasi pada hasilnya.
+
+**File View (`resources/views/livewire/build-gallery.blade.php`):**
+-   Harus memiliki dua input teks terpisah yang terhubung ke `wire:model` untuk `$searchHero` dan `$searchChallenge`.
+-   Tampilkan build dalam format grid yang responsif.
+-   Setiap kartu build harus menampilkan nama hero, nama challenge, ikon spell, dan 6 ikon item.
+-   Tampilkan link paginasi di bagian bawah."
+
+**Prompt 5.3 - MyBuilds:**
+
+"Tolong buatkan kode untuk komponen Livewire `MyBuilds`.
+
+**File Class (`app/Http/Livewire/MyBuilds.php`):**
+-   Method `render()`: Mengambil semua build yang `user_id`-nya sama dengan `auth()->id()`.
+-   Method `deleteBuild($buildId)`:
+    -   Cari build berdasarkan `$buildId`.
+    -   **PENTING:** Lakukan validasi untuk memastikan `user_id` pada build tersebut adalah milik `auth()->id()`.
+    -   Jika valid, hapus build tersebut.
+
+**File View (`resources/views/livewire/my-builds.blade.php`):**
+-   Gunakan Alpine.js (`x-data="{ open: false }"`) untuk membuat modal/popup.
+-   Harus ada tombol 'Tambah Build Baru' yang (`@click="open = true"`) membuka modal.
+-   Modal tersebut (`x-show="open"`) berisi dua tombol link: satu ke rute `dashboard` dan satu lagi ke rute `manual.build`.
+-   Tampilkan build milik pengguna dalam grid.
+-   Setiap kartu build harus memiliki tombol 'Hapus' yang terhubung ke `wire:click="deleteBuild(...)"` dan menyertakan konfirmasi JavaScript (`onclick="return confirm(...)"`)."
+
+---
+
+### **Langkah 6: Memperbarui Navigasi**
+
+**Prompt untuk Gemini Pro:**
+
+"Tolong buatkan saya konten untuk file `resources/views/layouts/navigation.blade.php` dari Laravel Breeze. Saya ingin menambahkan link navigasi baru dengan logika berikut:
+
+-   Link 'Generator' (ke rute `dashboard`), 'Manual Build' (ke rute `manual.build`), dan 'Gallery' (ke rute `gallery`) harus selalu terlihat, baik oleh tamu maupun pengguna yang sudah login.
+-   Link 'My Builds' (ke rute `my.builds`) hanya boleh terlihat oleh pengguna yang sudah login (gunakan `@auth`).
+-   Pastikan untuk menggunakan komponen `x-nav-link` dari Breeze."

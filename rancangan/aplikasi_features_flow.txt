@@ -1,0 +1,144 @@
+# Fitur, Langkah-langkah, dan Alur Aplikasi: MLBB Random Build Generator
+
+Dokumen ini menjelaskan secara komprehensif fitur-fitur utama, langkah-langkah implementasi, dan alur penggunaan aplikasi "MLBB Random Build Generator".
+
+## 1. Gambaran Umum Aplikasi
+
+**Nama Aplikasi:** MLBB Random Build Generator
+**Tujuan:** Membantu pemain Mobile Legends: Bang Bang (MLBB) untuk menghasilkan build item secara acak berdasarkan preferensi tertentu, membuat build manual, serta mengelola dan melihat koleksi build.
+**Target Pengguna:** Pemain MLBB yang mencari ide build baru, ingin bereksperimen, atau sekadar bersenang-senang dengan build acak.
+
+## 2. Tumpukan Teknologi (Tech Stack)
+
+*   **Backend Framework:** Laravel 11
+*   **Frontend:** Livewire & Blade (TALL Stack)
+*   **Styling:** Tailwind CSS
+*   **Interaktivitas Frontend:** Alpine.js
+*   **Panel Admin:** Filament
+*   **Manajemen Peran & Izin:** Spatie/laravel-permission
+*   **Database:** MySQL (atau SQLite untuk pengembangan lokal)
+
+## 3. Struktur Database (Model & Relasi Kunci)
+
+Aplikasi menggunakan skema database berikut, dengan relasi yang didefinisikan di model Eloquent:
+
+*   **`users`**:
+    *   `id`, `name`, `email`, `password`, `timestamps`.
+    *   Relasi ke `roles` (melalui Spatie/laravel-permission).
+*   **`roles`**: (Dikelola oleh Spatie/laravel-permission)
+    *   `id`, `name` (e.g., 'super-admin', 'admin', 'user', 'Tank', 'Fighter', 'Mage', etc.).
+*   **`heroes`**:
+    *   `id`, `name`, `lane` (e.g., 'exp', 'mid', 'roam', 'jungle', 'gold'), `icon_url` (opsional).
+    *   **Relasi:** Many-to-many dengan `roles` (melalui tabel pivot `hero_role`).
+*   **`spells`**:
+    *   `id`, `name`, `icon_url` (opsional).
+*   **`items`**:
+    *   `id`, `name`, `category` (e.g., 'physical', 'mage', 'tank', 'boots'), `icon_url` (opsional).
+*   **`builds`**:
+    *   `id`, `user_id` (Foreign Key ke `users`), `hero_id` (Foreign Key ke `heroes`), `spell_id` (Foreign Key ke `spells`), `challenge_name` (nullable), `timestamps`.
+    *   **Relasi:** Many-to-many dengan `items` (melalui tabel pivot `build_item`).
+*   **`hero_role`**: (Tabel Pivot)
+    *   `hero_id`, `role_id`.
+*   **`build_item`**: (Tabel Pivot)
+    *   `build_id`, `item_id`.
+
+## 4. Fitur Utama Aplikasi
+
+### 4.1. Autentikasi Pengguna
+*   **Login & Register:** Pengguna dapat membuat akun dan masuk/keluar.
+*   **Profil Pengguna:** Mengelola informasi dasar akun (nama, email, password).
+*   **Middleware `auth`:** Melindungi rute dan fitur yang hanya bisa diakses oleh pengguna yang sudah login.
+
+### 4.2. Build Generator (Halaman Utama)
+*   **Akses:** Publik (namun akan diarahkan ke login jika mencoba generate tanpa login).
+*   **Filter:**
+    *   **Filter By:** Dropdown untuk memilih jenis filter utama: "Lane" atau "Hero".
+    *   **Your Choice:** Dropdown dinamis yang menampilkan pilihan berdasarkan "Filter By" yang dipilih (daftar lane atau daftar hero).
+    *   **Role:** Dropdown terpisah untuk memfilter hero berdasarkan peran (Tank, Fighter, Mage, dll.). Ini dapat digunakan bersamaan dengan filter Lane atau Hero.
+    *   **Item Type:** Dropdown untuk memfilter item yang akan dihasilkan (All, Physical, Mage, Tank).
+*   **Logika Generasi:**
+    *   Memilih 1 Hero secara acak berdasarkan filter yang dipilih (Lane, Role, atau Hero spesifik).
+    *   Memilih 1 Battle Spell secara acak.
+    *   Memilih 6 Item: **Wajib 1 item 'boots'** secara acak, dan 5 item lainnya secara acak dari kategori yang dipilih (atau semua non-boots jika 'All').
+    *   Jika filter menghasilkan terlalu sedikit hero/item, sistem akan mencoba mengisi sisanya secara acak dari kategori yang lebih luas.
+*   **Tampilan Hasil:** Menampilkan Hero, Spell, dan 6 Item yang dihasilkan secara visual.
+*   **Penyimpanan Build:** Build yang dihasilkan akan disimpan ke database dan terkait dengan `user_id` jika pengguna sudah login.
+
+### 4.3. Manual Build Creator
+*   **Akses:** Publik (namun akan diarahkan ke login jika mencoba menyimpan tanpa login).
+*   **Formulir:** Memungkinkan pengguna untuk secara manual memilih:
+    *   1 Hero dari daftar.
+    *   1 Battle Spell dari daftar.
+    *   6 Item dari daftar (dengan validasi jumlah).
+    *   Input opsional untuk "Challenge Name".
+*   **Penyimpanan:** Build yang dibuat manual akan disimpan ke database dan terkait dengan `user_id` jika pengguna sudah login.
+
+### 4.4. Community Build Gallery
+*   **Akses:** Publik.
+*   **Tampilan:** Menampilkan semua build yang telah dibuat oleh pengguna lain dalam format grid kartu yang responsif.
+*   **Pencarian/Filter:** Input teks terpisah untuk mencari build berdasarkan "Hero Name" dan "Challenge Name".
+*   **Paginasi:** Mendukung paginasi untuk menelusuri banyak build.
+
+### 4.5. My Builds
+*   **Akses:** Memerlukan login.
+*   **Tampilan:** Menampilkan semua build yang dibuat oleh pengguna yang sedang login dalam format grid kartu.
+*   **Aksi:** Setiap kartu build memiliki tombol "Delete" dengan konfirmasi, yang hanya dapat menghapus build milik pengguna tersebut.
+*   **Tambah Build Baru:** Tombol utama yang memunculkan modal/popup untuk memilih antara "Generate Random Build" (mengarahkan ke halaman Generator) atau "Create Manual Build" (mengarahkan ke halaman Manual Build).
+
+### 4.6. Panel Admin (Filament)
+*   **Akses:** Hanya untuk peran 'admin' dan 'super-admin'.
+*   **Manajemen Data:**
+    *   CRUD (Create, Read, Update, Delete) untuk Heroes, Spells, dan Items.
+    *   Manajemen Pengguna, Peran, dan Izin.
+    *   Melihat semua build yang ada di sistem.
+
+## 5. Alur Penggunaan Aplikasi (User Journey)
+
+### 5.1. Pengguna Tamu (Guest)
+1.  Mengakses aplikasi.
+2.  Dapat melihat halaman **Generator**, **Manual Build**, dan **Gallery**.
+3.  Jika mencoba mengklik tombol "Generate Build" (di Generator) atau "Save Build" (di Manual Build) tanpa login, akan diarahkan ke halaman login.
+4.  Dapat mendaftar akun baru.
+
+### 5.2. Pengguna Terdaftar (Logged-in User)
+1.  Login ke akun mereka.
+2.  Dapat mengakses semua halaman: **Generator**, **Manual Build**, **Gallery**, **My Builds**, dan **Profile**.
+3.  Dapat menghasilkan build acak dan menyimpannya ke koleksi pribadi mereka.
+4.  Dapat membuat build manual dan menyimpannya.
+5.  Dapat melihat, mencari, dan menelusuri build di Gallery.
+6.  Dapat melihat dan menghapus build mereka sendiri di halaman My Builds.
+7.  Dapat memperbarui informasi profil mereka.
+
+### 5.3. Alur Generasi Build
+1.  Pengguna memilih filter (Lane, Hero, Role) dan kategori item.
+2.  Mengklik tombol "Generate Build".
+3.  Sistem memanggil `BuildGeneratorService` dengan filter yang diberikan.
+4.  `BuildGeneratorService` memilih Hero, Spell, dan 6 Item (memastikan 1 boots) berdasarkan filter.
+5.  Hasil build ditampilkan di halaman.
+6.  Build disimpan ke database jika pengguna login.
+
+## 6. Langkah-langkah Implementasi Kunci (Ringkasan)
+
+1.  **Inisialisasi Proyek:**
+    *   Instalasi Laravel 11.
+    *   Konfigurasi database.
+    *   Instalasi Laravel Breeze untuk autentikasi.
+    *   Instalasi Filament untuk panel admin.
+    *   Instalasi Spatie/laravel-permission untuk manajemen peran.
+2.  **Migrasi & Seeding Database:**
+    *   Membuat semua tabel yang diperlukan (`users`, `heroes`, `spells`, `items`, `builds`, `hero_role`, `build_item`).
+    *   Membuat seeder untuk mengisi data awal (peran pengguna, peran hero, hero, spell, item).
+3.  **Pengembangan Backend (Service & Models):**
+    *   Mendefinisikan model Eloquent dengan relasi yang benar.
+    *   Mengembangkan `BuildGeneratorService` untuk logika pemilihan build.
+4.  **Pengembangan Frontend (Livewire Components):**
+    *   Membuat komponen Livewire untuk setiap halaman utama (`BuildGenerator`, `ManualBuild`, `BuildGallery`, `MyBuilds`).
+    *   Mengimplementasikan logika frontend dan interaksi menggunakan Livewire dan Alpine.js.
+    *   Menerapkan desain UI yang konsisten menggunakan Tailwind CSS.
+5.  **Routing:**
+    *   Mendefinisikan rute web untuk semua halaman, membedakan akses publik dan terautentikasi.
+6.  **Panel Admin:**
+    *   Mengkonfigurasi Filament Resources untuk mengelola data master dan pengguna.
+
+---
+**Catatan:** Dokumen ini akan terus diperbarui seiring dengan pengembangan dan penambahan fitur baru.

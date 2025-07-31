@@ -25,7 +25,7 @@ class BuildGeneratorService
         }
 
         // Logika untuk memilih item (1 boots, 5 non-boots)
-        $items = $this->selectItems();
+        $items = $this->selectItems($filters['item_category'] ?? 'all');
         if (count($items) !== 6) {
             return null; // Pastikan 6 item terpilih
         }
@@ -43,6 +43,11 @@ class BuildGeneratorService
         if (isset($filters['lane'])) {
             $query->where('lane', $filters['lane']);
         }
+        if (isset($filters['role'])) {
+            $query->whereHas('roles', function ($q) use ($filters) {
+                $q->where('name', $filters['role']);
+            });
+        }
         if (isset($filters['hero_id'])) {
             $query->where('id', $filters['hero_id']);
         }
@@ -55,19 +60,34 @@ class BuildGeneratorService
         return Spell::inRandomOrder()->first();
     }
 
-    protected function selectItems(): array
+    protected function selectItems(string $category = 'all'): array
     {
         $boots = Item::where('category', 'boots')->inRandomOrder()->first();
-        $nonBoots = Item::where('category', '!=', 'boots')
-                        ->inRandomOrder()
-                        ->limit(5)
-                        ->get();
+
+        $nonBootsQuery = Item::where('category', '!=', 'boots');
+
+        if ($category !== 'all') {
+            $nonBootsQuery->where('category', $category);
+        }
+
+        $nonBoots = $nonBootsQuery->inRandomOrder()->limit(5)->get();
 
         $items = [];
         if ($boots) {
             $items[] = $boots;
         }
         $items = array_merge($items, $nonBoots->all());
+
+        // If the category filter resulted in less than 5 items, fill the rest with random non-boot items
+        if (count($items) < 6) {
+            $needed = 6 - count($items);
+            $fillerItems = Item::where('category', '!=', 'boots')
+                                ->whereNotIn('id', collect($items)->pluck('id'))
+                                ->inRandomOrder()
+                                ->limit($needed)
+                                ->get();
+            $items = array_merge($items, $fillerItems->all());
+        }
 
         return $items;
     }

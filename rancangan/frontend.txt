@@ -1,0 +1,50 @@
+# Rencana Lengkap Pengembangan Frontend (MLBB Generator)
+
+Dokumen ini merinci semua komponen, halaman, dan langkah yang diperlukan untuk membangun antarmuka pengguna (frontend) untuk aplikasi MLBB Generator menggunakan TALL Stack.
+
+## 1. Basis: Sistem Autentikasi & Profil Pengguna
+- **Halaman:** /login, /register, /forgot-password, /profile (memerlukan login).
+
+## 2. Fitur Inti: Halaman Generator
+- **Komponen Livewire:** `BuildGenerator.php`
+- **Akses:** Publik.
+- **Logika Aksi:** Tombol "Generate" akan mengarahkan tamu ke halaman login.
+- **Fitur UI (Revisi):**
+  - **Filter Kompleks:** Pengguna dapat memilih salah satu dari dua metode filter:
+    1.  **Filter berdasarkan Lane:** Dropdown yang mendukung multi-pilihan (misal: checkbox) untuk memilih satu atau lebih lane (`exp`, `mid`, `roam`, dll.), termasuk opsi "All Lanes".
+    2.  **Filter berdasarkan Hero:** Dropdown dengan fitur pencarian (searchable dropdown) untuk memilih satu hero secara spesifik.
+  - **Tombol Aksi:** Tombol "Generate Build".
+  - **Area Hasil:** Menampilkan build yang dihasilkan secara visual.
+
+## 3. Fitur Tambahan: Halaman Manual Build
+- **Komponen Livewire:** `ManualBuild.php`
+- **Akses:** Publik.
+- **Logika Aksi:** Tombol "Simpan" akan mengarahkan tamu ke halaman login.
+- **Fitur UI:** Formulir lengkap dengan dropdown pencarian untuk memilih 1 Hero, 1 Spell, dan 6 Item, serta input untuk `challenge_name`.
+
+## 4. Halaman Komunitas: Galeri Build
+- **Komponen Livewire:** `BuildGallery.php`
+- **Akses:** Publik.
+- **Fitur UI (Revisi):**
+  - **Tampilan Grid:** Menampilkan build dalam format kartu.
+  - **Filter Ganda:** Terdapat dua input pencarian terpisah:
+    1.  Satu untuk memfilter berdasarkan **Nama Hero**.
+    2.  Satu lagi untuk memfilter berdasarkan **Nama Challenge**.
+  - **Paginasi.**
+
+## 5. Halaman Pribadi: My Builds
+- **Komponen Livewire:** `MyBuilds.php`
+- **Akses:** Memerlukan login (`auth` middleware).
+- **Fitur UI (Revisi):**
+  - **Tombol Tambah Build Baru:** Sebuah tombol utama di bagian atas halaman. Saat diklik, akan memunculkan **popup/modal**.
+  - **Popup Navigasi:** Modal ini berisi dua tombol:
+    1.  "Buat Build Acak" (mengarahkan ke halaman Generator).
+    2.  "Buat Build Manual" (mengarahkan ke halaman Manual Build).
+  - **Tampilan Grid:** Menampilkan semua build milik pengguna.
+  - **Aksi per Build:** Setiap kartu build memiliki tombol **Hapus**.
+- **Logika Keamanan:** Proses penghapusan build **wajib** memverifikasi bahwa build tersebut adalah milik pengguna yang sedang login.
+
+## 6. Struktur & Navigasi
+- **Layout & Navbar:** `layouts/app.blade.php` dan `layouts/navigation.blade.php`.
+  - **Tamu:** Link ke Generator, Manual Build, Galeri, Login, Register.
+  - **Login:** Link ke Generator, Manual Build, Galeri, My Builds, dan menu Profil/Logout.
